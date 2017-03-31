@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+ "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+ "http://struts.apache.org/dtds/struts-2.3.dtd">
+ 
+<struts>
+	<constant name="struts.i18n.encoding" value="gb2312"></constant>
+	<constant name="struts.custom.i18n.resources" value="myMessage"></constant>
+	<constant name="struts.objectFactory" value="spring" /> 
+	
+	<package name="struts2" extends="struts-default">
+		<interceptors>
+			<interceptor name="userIntercepotr" class="com.goodyang.blog.interceptor.UserInterceptor"></interceptor>
+		</interceptors>
+		
+		<action name="register" class="registerAction">
+			<result name="success">/success.jsp</result>
+			<result name="error">/error.jsp</result>
+			<result name="input">/input.jsp</result>
+		</action>
+		
+		<action name="login" class="loginAction">
+			<result name="success">/success.jsp</result>
+			<result name="error">/error.jsp</result>
+			<result name="input">/input.jsp</result>
+		</action>
+		
+		<action name="addArticle" class="addArticleAction">
+			<result name="success" type="chain">showUserAllArticle</result>
+			<result name="error">/error.jsp</result>
+			<result name="login" type="redirect">/login.jsp</result>
+			<interceptor-ref name="userInterceptor"></interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+		</action>
+	</package>
+</struts>

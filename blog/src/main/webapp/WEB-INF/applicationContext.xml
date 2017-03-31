@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+	
+	<bean id="myDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url">
+        	<value>jdbc:mysql://localhost:3306/db_blog?useUnicode=true&amp;characterEncoding=utf8</value>
+        </property>
+        <property name="username" value="root"/>
+        <property name="password" value="mysql2013"/>
+    </bean>
+    
+	<bean id="mySessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="myDataSource"></property>
+		<property name="mappingResources">
+			<list>
+				<value>com/goodyang/blog/po/Article.hbm.xml</value>
+				<value>com/goodyang/blog/po/Critique.hbm.xml</value>
+				<value>com/goodyang/blog/po/User.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+		<props>
+			<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+		</props>
+		</property>
+	</bean>
+	
+	<bean id="DAOSupport" class="com.goodyang.blog.dao.DAOSupport">
+		<property name="sessionFactory" ref="mySessionFactory"></property>	
+	</bean>
+	
+	<bean id="userDAO" class="com.goodyang.blog.dao.UserDAOImpl">	
+	</bean>
+	
+	<bean id="userService" class="com.goodyang.blog.service.UserServiceImpl">
+		<property name="userDAO">
+			<ref bean="userDAO"/>
+		</property>
+	</bean>
+	
+	<bean id="registerAction" class="com.goodyang.blog.action.Register" scope="prototype">
+		<property name="userService">
+			<ref bean="userService"/>
+		</property>
+	</bean>
+	
+	
+	
+	<bean id="loginAction" class="com.goodyang.blog.action.Login" scope="prototype">
+		<property name="userService">
+			<ref bean="userService"/>
+		</property>
+	</bean>
+	
+	<bean id="articleDAO" class="com.goodyang.blog.dao.ArticleDAOImpl">	
+	</bean>
+	
+	<bean id="articleService" class="com.goodyang.blog.service.ArticleServiceImpl">
+		<property name="articleDAO">
+			<ref bean="articleDAO"/>
+		</property>
+	</bean>
+	
+	<bean id="addArticleAction" class="com.goodyang.blog.action.AddArticle">
+		<property name="articleService">
+			<ref bean="articleService"/>
+		</property>
+	</bean>
+</beans>
